@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "312834062900",
+    "project_id": "sangeetapp-92b64",
+    "storage_bucket": "sangeetapp-92b64.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312834062900:android:a9cb899d1414505d59a861",
+        "android_client_info": {
+          "package_name": "com.musicplayerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "312834062900-6ejfbgc3ks9kmthgbfm2ta6keq5jgcc0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.musicplayerapp",
+            "certificate_hash": "d88dcf593d5918f31229ca395d2929fb12486eff"
+          }
+        },
+        {
+          "client_id": "312834062900-gmme794usjoot4oi5mcrsbpobq8ajnm8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3qz5ExPa-QsVLxvd8azMX5Jnlos6Pjg8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "312834062900-gmme794usjoot4oi5mcrsbpobq8ajnm8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
