@@ -20,59 +20,96 @@ const MusicPlayer = ({ route, navigation }) => {
   const songDetails = route.params?.song || (albumDetails ? albumDetails.tracks[0] : null);
 
   useEffect(() => {
-    if (albumDetails) {
-      setTracks(albumDetails.tracks); // Assuming 'albumDetails.tracks' is an array of track objects
-      loadTrack(albumDetails.tracks[0]); // Load the first track of the album
-    } else if (songDetails) {
-      setTracks([songDetails]); // Single track
-      loadTrack(songDetails);
+    // Determine the source of tracks (album, single song, or playlist)
+    let sourceTracks = songDetails || albumDetails?.tracks || route.params?.songs;
+    
+    if (sourceTracks) {
+      setTracks(Array.isArray(sourceTracks) ? sourceTracks : [sourceTracks]);
+      setTrackIndex(0);
+      loadTrack(Array.isArray(sourceTracks) ? sourceTracks[0] : sourceTracks, true);
     }
-    return () => sound?.release();
-  }, [albumDetails, songDetails]);
 
-  const loadTrack = (track) => {
-    if (track && track.preview) {
-      const newSound = new Sound(track.preview, Sound.MAIN_BUNDLE, (error) => {
+    return () => {
+      if (sound) {
+        sound.release();
+        setSound(null);
+      }
+    };
+  }, [route.params]);
+  
+
+  const loadTrack = (track, shouldPlay = false) => {
+    console.log('Attempting to load track:', track.title);
+    const previewUrl = track?.previewUrl || track?.preview;
+    console.log('Preview URL:', previewUrl);
+  
+    if (previewUrl) {
+      console.log('Initializing sound object...');
+      const newSound = new Sound(previewUrl, null, (error) => {
         if (error) {
-          console.log('Failed to load the sound', error);
+          console.error('Failed to load the sound', error);
           return;
         }
-        // loaded successfully
-        newSound.setVolume(volume);
+        console.log(`Track loaded successfully: ${track.title}`);
         setSound(newSound);
-        if (isPlaying) {
-          newSound.play();
+        newSound.setVolume(volume);
+        console.log('Sound object set and volume adjusted');
+  
+        if (shouldPlay) {
+          console.log('Playing sound...');
+          newSound.play((success) => {
+            if (!success) {
+              console.error('Playback failed due to audio decoding errors');
+            } else {
+              console.log('Playback successful');
+            }
+            setIsPlaying(false);
+          });
+          setIsPlaying(true);
         }
       });
+    } else {
+      console.error('No preview URL found for the track:', track.title);
     }
   };
+  
+  
 
   const togglePlayPause = () => {
+    console.log('Toggling play/pause. Current isPlaying:', isPlaying);
     if (sound) {
+      console.log('Sound object exists:', sound);
+      
       if (isPlaying) {
+        console.log('Pausing playback');
         sound.pause();
       } else {
-        sound.play((success) => {
-          if (!success) {
-            console.log('Playback failed due to audio decoding errors');
-          }
+        console.log('Starting playback');
+        sound.play(() => {
+          console.log('Playback completed');
+          setIsPlaying(false);
         });
       }
+      
       setIsPlaying(!isPlaying);
+    } else {
+      console.error('No sound object found to play/pause.');
     }
   };
+  
+
 
   const handleNextTrack = () => {
     if (trackIndex < tracks.length - 1) {
       setTrackIndex(trackIndex + 1);
-      loadTrack(tracks[trackIndex + 1]);
+      loadTrack(tracks[trackIndex + 1], true);
     }
   };
 
   const handlePreviousTrack = () => {
     if (trackIndex > 0) {
       setTrackIndex(trackIndex - 1);
-      loadTrack(tracks[trackIndex - 1]);
+      loadTrack(tracks[trackIndex - 1], true);
     }
   };
 
@@ -81,13 +118,15 @@ const MusicPlayer = ({ route, navigation }) => {
     if (!isShuffled) {
       const shuffledTracks = [...tracks].sort(() => Math.random() - 0.5);
       setTracks(shuffledTracks);
-      loadTrack(shuffledTracks[0]);
+      setTrackIndex(0);
+      loadTrack(shuffledTracks[0], true);
     } else {
-      // Reset to the original album's track list
-      setTracks(albumDetails ? albumDetails.tracks : [songDetails]);
-      loadTrack(albumDetails.tracks[0]);
+      if (albumDetails?.tracks) {
+        setTracks(albumDetails.tracks);
+        setTrackIndex(0);
+        loadTrack(albumDetails.tracks[0], true);
+      }
     }
-    setTrackIndex(0);
   };
 
   const handleVolumeChange = (newVolume) => {
@@ -168,7 +207,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     padding: 10,
-    justifyContent: 'space-between', // Align content to the start and end of container
+    justifyContent: 'space-between',
   },
   topBar: {
     flexDirection: 'row',
@@ -207,3 +246,4 @@ const styles = StyleSheet.create({
 });
 
 export default MusicPlayer;
+

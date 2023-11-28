@@ -14,6 +14,7 @@ const Home = ({ navigation }) => {
     fetchRelatedArtistsFromSpotify();
   }, []);
 
+  
 
   const fetchTopSongsFromSpotify = async () => {
     const options = {
@@ -74,9 +75,11 @@ const Home = ({ navigation }) => {
   };
 
   const navigateToProfile = () => {
-    // Placeholder for profile navigation
-    console.log("Profile icon clicked");
+    console.log('Available routes:', navigation.getState());
+    navigation.navigate('Account');
   };
+  
+  
 
   return (
     <View style={styles.container}>
@@ -125,6 +128,8 @@ const HorizontalList = ({ title, data, navigation, type }) => {
     Linking.openURL(item.spotifyUrl);
   }
 };
+
+
 
 
 return (
