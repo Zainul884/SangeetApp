@@ -18,9 +18,14 @@ export async function addPlaylist(userId, playlist) {
     return docRef.id;
 }
 
-// Function to delete a specific playlist
 export async function deletePlaylist(userId, playlistId) {
-    await deleteDoc(doc(db, "users", userId, "playlists", playlistId));
+    console.log(`Attempting to delete playlist with ID ${playlistId} for user ${userId}`);
+    try {
+        await deleteDoc(doc(db, "users", userId, "playlists", playlistId));
+        console.log(`Playlist ${playlistId} deleted successfully`);
+    } catch (error) {
+        console.error(`Error deleting playlist ${playlistId}:`, error);
+    }
 }
 
 // Function to get all songs in a specific playlist
@@ -39,8 +44,16 @@ export async function addSongToPlaylist(userId, playlistId, song) {
     const docRef = await addDoc(collection(db, "users", userId, "playlists", playlistId, "songs"), song);
     return docRef.id;
 }
-
-// Function to delete a song from a playlist
-export async function deleteSongFromPlaylist(userId, playlistId, songId) {
-    await deleteDoc(doc(db, "users", userId, "playlists", playlistId, "songs", songId));
+export async function removeSongFromPlaylist(userId, playlistId, songId) {
+    const songDocPath = `users/${userId}/playlists/${playlistId}/songs/${songId}`;
+    console.log(`Attempting to remove song at path: ${songDocPath}`);
+    
+    try {
+        await deleteDoc(doc(db, songDocPath));
+        console.log(`Song removed successfully from path: ${songDocPath}`);
+        return true; // Indicate success
+    } catch (error) {
+        console.error(`Error removing song from path ${songDocPath}:`, error);
+        return false; // Indicate failure
+    }
 }

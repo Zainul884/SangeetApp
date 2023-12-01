@@ -6,39 +6,41 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [favorites, setFavorites] = useState([]);
+
   const auth = getAuth();
 
   useEffect(() => {
-    // Clear AsyncStorage for testing purposes
-    // AsyncStorage.clear(); // Uncomment this line for testing
-
-    // Subscribe to Firebase auth state changes
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      console.log('onAuthStateChanged triggered', firebaseUser); // Debugging line
       if (firebaseUser) {
-        // User is signed in, update state and AsyncStorage
         const userData = {
           uid: firebaseUser.uid,
           email: firebaseUser.email,
-          // ... any other user data you want to store
+          // ... any other user data
         };
         setUser(userData);
         await AsyncStorage.setItem('user', JSON.stringify(userData));
-        console.log('User signed in, data saved to AsyncStorage'); // Debugging line
+
+        const storedFavorites = await AsyncStorage.getItem('favorites');
+        if (storedFavorites) setFavorites(JSON.parse(storedFavorites));
       } else {
-        // User is signed out, update state and clear AsyncStorage
         setUser(null);
         await AsyncStorage.removeItem('user');
-        console.log('User signed out, data cleared from AsyncStorage'); // Debugging line
       }
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
+  const updateFavorites = async (newFavorites) => {
+    console.log("Updating favorites:", newFavorites);
+    setFavorites(newFavorites);
+    await AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
+  };
+  
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, favorites, updateFavorites }}>
       {children}
     </AuthContext.Provider>
   );

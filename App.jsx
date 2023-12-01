@@ -5,11 +5,13 @@ import { AuthProvider, AuthContext } from './AuthContext';
 import Home from './components/Home';
 import MusicPlayer from './components/MusicPlayer';
 import Playlists from './components/Playlists';
-import PlaylistDetails from './components/PlaylistDetails'; // Import PlaylistDetails
+import PlaylistDetails from './components/PlaylistDetails';
+import ArtistDetailScreen from './components/ArtistDetailScreen'; 
 import Login from './components/Login';
 import Register from './components/Register';
 import Account from './components/Account'; 
 import './firebaseConfig'; 
+import Search from './components/Search';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +27,9 @@ const AppNavigator = () => {
             <Stack.Screen name="MusicPlayer" component={MusicPlayer} />
             <Stack.Screen name="Playlists" component={Playlists} />
             <Stack.Screen name="PlaylistDetails" component={PlaylistDetails} />
+            <Stack.Screen name="ArtistDetailScreen" component={ArtistDetailScreen} />
             <Stack.Screen name="Account" component={Account} />
+            <Stack.Screen name="Search" component={Search} />
           </>
         ) : (
           <>
@@ -37,7 +41,6 @@ const AppNavigator = () => {
     </NavigationContainer>
   );
 };
-
 
 const App = () => {
   return (

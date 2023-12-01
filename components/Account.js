@@ -1,27 +1,23 @@
-// AccountScreen.js
-import React, { useContext } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
-import { getAuth, signOut } from 'firebase/auth';
-import { AuthContext } from '../AuthContext'; // Adjust the path as necessary
+import React, { useState, useContext } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure this package is installed
+import { AuthContext } from '../AuthContext';
 
-const AccountScreen = () => {
+const Account = () => {
   const { user, setUser } = useContext(AuthContext);
-  const auth = getAuth();
 
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-      setUser(null); // Update the user state to null after signing out
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
+  const handleSignOut = () => {
+    // Sign out logic here
+    setUser(null);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Account Page</Text>
-      <Text>Email: {user?.email}</Text> {/* Display the user's email */}
-      <Button title="Sign Out" onPress={handleSignOut} />
+      <Icon name="user-circle" size={100} color="white" style={styles.icon} />
+      <Text style={styles.emailText}>{user ? user.email : 'Guest'}</Text>
+      <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+        <Text style={styles.buttonText}>Sign Out</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -29,13 +25,37 @@ const AccountScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#1e1e1e', // Dark background
   },
-  text: {
-    fontSize: 20,
+  emailText: {
+    fontSize: 18,
     marginBottom: 20,
+    color: 'white', // White text color
+    textShadowColor: 'rgba(255, 255, 255, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10
   },
+  signOutButton: {
+    backgroundColor: '#FF6347', // Button color
+    padding: 10,
+    borderRadius: 5,
+    shadowColor: 'white', // Button glow effect
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 3,
+  },
+  buttonText: {
+    color: 'white', // Button text color
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  icon: {
+    textShadowColor: 'rgba(255, 255, 255, 0.75)',
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10
+  }
 });
 
-export default AccountScreen;
+export default Account;
