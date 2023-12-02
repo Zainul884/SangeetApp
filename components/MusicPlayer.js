@@ -374,9 +374,9 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 40,
     marginTop: 10,
-    backgroundColor: '#1e1e1e', // Adjust the background color as needed
-    borderRadius: 10, // Rounded corners for a distinct look
-    shadowColor: '#FFFFFF', // White shadow for a glow effect
+    backgroundColor: '#1e1e1e', 
+    borderRadius: 10, 
+    shadowColor: '#FFFFFF', 
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 5,
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   },
   trackProgressSlider: {
     flex: 1,
-    marginHorizontal: 5, // Add space around the slider
+    marginHorizontal: 5, 
   },
 });
 
